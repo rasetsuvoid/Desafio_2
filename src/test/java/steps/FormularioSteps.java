@@ -16,7 +16,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.ContactoPage;
 import util.UtilidadCapturaPantalla;
 
-public class FormularioExitosoSteps {
+public class FormularioSteps {
     WebDriver driver;
     ContactoPage contacto;
 
@@ -42,7 +42,7 @@ public class FormularioExitosoSteps {
             case "Tu Email":
                 contacto.ingresarEmail(valor);
                 break;
-            case "Varrio":
+            case "Tu Barrio":
                 contacto.ingresarBarrio(valor);
                 break;
             case "Asunto":
@@ -77,12 +77,27 @@ public class FormularioExitosoSteps {
 
     @Then("El formulario se envía correctamente")
     public void el_formulario_se_envía_correctamente() {
-        
+
         Alert alerta = driver.switchTo().alert();
-        String mensaje = alerta.getText(); 
+        String mensaje = alerta.getText();
         alerta.accept();
         // Validamos que el mensaje NO sea de error
         Assert.assertNotEquals("UPPPPS ALGO HA FALLADO :(", mensaje);
+    }
+
+    @Then("Se muestran mensajes de error indicando que los campos son obligatorios")
+    public void verificarErroresCamposObligatorios() {
+        contacto.verificarErrores();
+    }
+
+    @Then("Se muestra un mensaje de error indicando que el {string} no es válido")
+    public void verificarMensajeErrorCampo(String campo) {
+        contacto.verificarMensajeErrorCampo(campo, true);
+    }
+
+    @Then("No se muestra un mensaje de error para el campo {string}")
+    public void noDebeMostrarseMensajeError(String campo) {
+        contacto.verificarMensajeErrorCampo(campo, false);
     }
 
     @After
