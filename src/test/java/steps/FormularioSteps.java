@@ -2,10 +2,17 @@ package steps;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -66,8 +73,15 @@ public class FormularioSteps {
     }
 
     @When("presiona el botón {string}")
-    public void presiona_el_botón(String boton) {
-        UtilidadCapturaPantalla.tomarCaptura(driver, "src/test/resources/pantallazos/scenario1.png");
+    public void presiona_el_botón(String boton) throws InterruptedException {
+        // Tomar captura con timestamp
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String rutaCaptura = "src/test/resources/pantallazos/captura_" + timestamp + ".png";
+        UtilidadCapturaPantalla.tomarCaptura(driver, rutaCaptura);
+
+        Thread.sleep(1000);
+        
+        // Acción sobre el botón
         if (boton.equals("Enviar")) {
             contacto.presionarEnviar();
         } else {
@@ -102,6 +116,9 @@ public class FormularioSteps {
 
     @After
     public void cerrarDriver() {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String rutaCaptura = "src/test/resources/pantallazos/captura_" + timestamp + ".png";
+        UtilidadCapturaPantalla.tomarCaptura(driver, rutaCaptura);
         if (driver != null) {
             driver.quit();
         }
